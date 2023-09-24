@@ -1,21 +1,21 @@
 const { Client } = require("pg");
-
-//console.log(Client);
-
+require("dotenv").config();
 const app = require("./app");
 
+const { PORT, DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_USER_PASSWORD } = process.env;
+
 const client = new Client({
-  host: "dpg-ck5cvqmi9prc73a11acg-a.frankfurt-postgres.render.com",
-  port: 5432,
-  database: "monitoring",
-  user: "monitoring_user",
-  password: "u8FOHlaW0uGu4KaacePwKcH3Cg1i5492",
+  host: DB_HOST,
+  port: DB_PORT,
+  database: DB_NAME,
+  user: DB_USER,
+  password: DB_USER_PASSWORD,
   ssl: "no-verify",
 });
 
 //console.log(client);
 //const { DB_HOST, PORT } = process.env;
-const PORT = 3000;
+//const PORT = 80;
 
 // client.connect();
 

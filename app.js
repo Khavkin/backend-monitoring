@@ -4,7 +4,7 @@ const logger = require("morgan");
 const cors = require("cors");
 
 // const authRouter = require("./routes/api/auth");
-// const recipesRouter = require("./routes/api/recipes");
+const monitoringRouter = require("./routes/api/monitoring");
 // const shoppingListRouter = require("./routes/api/shopping-list");
 // const ingredientsRouter = require("./routes/api/ingredients");
 
@@ -17,8 +17,8 @@ app.use(cors());
 app.use(express.json());
 //app.use(express.static("public"));
 
-// app.use("/api/users", authRouter);
-// app.use("/api/recipes/", recipesRouter);
+//app.use("/api/users", authRouter);
+app.use("/api/monitoring", monitoringRouter);
 // app.use("/api/shopping-list", shoppingListRouter);
 // app.use("/api/ingredients", ingredientsRouter);
 
