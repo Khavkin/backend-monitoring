@@ -1,4 +1,5 @@
 const Data = require("../models/data");
+const { ctrlWrapper } = require("../helpers/ctrl-wrapper");
 
 async function insertData(req, res) {
   const { Shop_ID, DeviceCode, ID1, Data1, ID2, Data2, ID3, Data3, ID4, Data4, ID5, Data5 } =
@@ -32,6 +33,6 @@ async function getData(req, res) {
 }
 
 module.exports = {
-  insertData,
-  getData,
+  insertData: ctrlWrapper(insertData),
+  getData: ctrlWrapper(getData),
 };
