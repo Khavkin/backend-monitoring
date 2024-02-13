@@ -20,7 +20,7 @@ async function insertData(req, res) {
     data5: Data5,
   });
 
-  console.log(req.body, new Date());
+  console.log(req.body, Date.now());
   console.log("insert data: ", data.id, data.date, data.object_id, data.sensor1, data.data1);
 
   res.status(201).json({ message: "OK" });
