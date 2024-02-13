@@ -5,7 +5,7 @@ async function insertData(req, res) {
   const { Shop_ID, DeviceCode, ID1, Data1, ID2, Data2, ID3, Data3, ID4, Data4, ID5, Data5 } =
     req.body;
   const data = await Data.create({
-    date: new Date(),
+    date: Date.now(),
     object_id: Shop_ID,
     device_code: DeviceCode,
     sensor1: ID1,
@@ -20,7 +20,7 @@ async function insertData(req, res) {
     data5: Data5,
   });
 
-  //console.log(req.body);
+  console.log(req.body, new Date());
   console.log("insert data: ", data.id, data.date, data.object_id, data.sensor1, data.data1);
 
   res.status(201).json({ message: "OK" });

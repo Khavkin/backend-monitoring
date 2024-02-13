@@ -1,10 +1,14 @@
 //const { Client } = require("pg");
 require("dotenv").config();
 const app = require("./app");
-const { sq } = require("./config/postgresql/db");
+const { PORT, DB_DRIVER } = process.env;
 
-// const { PORT, DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_USER_PASSWORD } = process.env;
-const { PORT } = process.env;
+const { sq } =
+  DB_DRIVER === "MYSQL" ? require("./config/mysql/db") : require("./config/postgresql/db");
+
+//const { PORT, DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_USER_PASSWORD, DB_DRIVER } = process.env;
+
+//const { PORT } = process.env;
 
 // const client = new Client({
 //   host: DB_HOST,
@@ -34,6 +38,8 @@ const { PORT } = process.env;
 //   .catch(error => {
 //     console.log(error.message);
 //     process.exit(1);
+
+//app.listen(PORT);
 
 sq.authenticate()
   .then(() => {
