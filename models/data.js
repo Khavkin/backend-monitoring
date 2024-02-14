@@ -1,7 +1,6 @@
 const { DB_DRIVER } = process.env;
 
-const { sq } =
-  DB_DRIVER === "MYSQL" ? require("../config/mysql/db") : require("../config/postgresql/db");
+const { sq } = DB_DRIVER === "MYSQL" ? require("../config/mysql/db") : require("../config/postgresql/db");
 const { DataTypes, NOW } = require("sequelize");
 
 const Data = sq.define(
@@ -55,8 +54,8 @@ const Data = sq.define(
   }
 );
 
-Data.sync()
-  .then(() => console.log("Table data synced"))
-  .catch(error => console.log(error));
+// Data.sync()
+//   .then(() => console.log("Table data synced"))
+//   .catch(error => console.log(error));
 
 module.exports = Data;
