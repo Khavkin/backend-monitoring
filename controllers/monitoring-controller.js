@@ -1,4 +1,4 @@
-const Data = require("../models/data");
+const Data = require("../models/data-model");
 const { ctrlWrapper } = require("../helpers");
 
 async function insertData(req, res) {

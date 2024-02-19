@@ -1,6 +1,7 @@
 const { DB_DRIVER } = process.env;
 
-const { sq } = DB_DRIVER === "MYSQL" ? require("../config/mysql/db") : require("../config/postgresql/db");
+const { sq } =
+  DB_DRIVER === "MYSQL" ? require("../config/mysql/db") : require("../config/postgresql/db");
 const { DataTypes, NOW } = require("sequelize");
 
 const User = sq.define(
@@ -13,6 +14,7 @@ const User = sq.define(
     phone: { type: DataTypes.STRING },
     blocked: { type: DataTypes.BOOLEAN },
     email: { type: DataTypes.STRING(45) },
+    isAdmin: { type: DataTypes.BOOLEAN },
   },
   {
     timestamps: false,
