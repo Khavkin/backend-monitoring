@@ -4,8 +4,10 @@ const { DataTypes, NOW } = require("sequelize");
 const { DB_DRIVER } = process.env;
 const { sq } =
   DB_DRIVER === "MYSQL" ? require("../config/mysql/db") : require("../config/postgresql/db");
-
 const { validationMessages } = require("../helpers");
+
+const emailRegexp = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+const phoneRegexp = /^[+]{1}(?:[0-9\-\(\)\/\.]\s?){6, 15}[0-9]{1}$/;
 
 const User = sq.define(
   "User",
@@ -31,7 +33,7 @@ const addUserSchema = Joi.object({
   password: Joi.string().min(8).required().messages(validationMessages),
   fullname: Joi.string().required().messages(validationMessages),
   phone: Joi.string().required().messages(validationMessages),
-  email: Joi.string().required().messages(validationMessages),
+  email: Joi.string().required().pattern(emailRegexp).messages(validationMessages),
   isBlocked: Joi.boolean().messages(validationMessages),
   isAdmin: Joi.boolean().messages(validationMessages),
   isMustChangePassword: Joi.boolean().messages(validationMessages),

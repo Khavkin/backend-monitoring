@@ -1,8 +1,10 @@
 const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
+const jwt = require("jsonwebtoken");
 
 const { User } = require("../models/user-model");
 const { ctrlWrapper, HttpError } = require("../helpers");
+const { SECRET_KEY } = process.env;
 
 // Add new user
 async function addUser(req, res) {
@@ -31,7 +33,8 @@ async function addUser(req, res) {
     isMustChangePassword,
   });
 
-  console.log(user);
+  //console.log(user);
+  res.status(201).json({ message: "User added succesfully" });
 }
 
 //Update user info.
@@ -51,7 +54,51 @@ async function changeUserPassword(req, res) {}
 async function setUserRights(req, res) {}
 
 //Login
-async function login(req, res) {}
+async function login(req, res) {
+  const { login, password } = req.body;
+
+  const user = await User.findOne({
+    where: { [Op.or]: [{ login: login }, { email: login }, { phone: login }] },
+  });
+
+  console.log(user);
+
+  if (!user) {
+    throw HttpError(401, "Authorization error");
+  }
+
+  if (user.isBlocked) throw HttpError(401, "User blocked by Admin");
+
+  const passwordCompare = await bcrypt.compare(password, user.password);
+  if (!passwordCompare) {
+    throw HttpError(401, "Authorization error");
+  }
+
+  const payload = { id: user.id };
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
+
+  await User.update(
+    { token },
+    {
+      where: {
+        id: user.id,
+      },
+    }
+  );
+
+  res.json({
+    token,
+    user: {
+      id: user.id,
+      fullname: user.fullname,
+      email: user.email,
+      phone: user.phone,
+      isAdmin: user.isAdmin,
+      isBlocked: user.isBlocked,
+      isMustChangePassword: user.isMustChangePassword,
+    },
+  });
+}
 
 //Logout
 async function logout(req, res) {}
