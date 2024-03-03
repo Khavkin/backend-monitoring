@@ -12,7 +12,6 @@ async function addUser(req, res) {
   const { login, password, fullname, phone, isAdmin, email, isBlocked, isMustChangePassword } =
     req.body;
   const { isAdmin: authUserIsAdmin } = req.user;
-  console.log(authUserIsAdmin);
 
   if (!authUserIsAdmin) {
     throw HttpError(401, "You don't have permissions to add users!");
