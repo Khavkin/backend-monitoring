@@ -28,6 +28,11 @@ const User = sq.define(
   }
 );
 
+const loginUserSchema = Joi.object({
+  login: Joi.string().required().messages(validationMessages),
+  password: Joi.string().min(8).required().messages(validationMessages),
+});
+
 const addUserSchema = Joi.object({
   login: Joi.string().required().messages(validationMessages),
   password: Joi.string().min(8).required().messages(validationMessages),
@@ -39,6 +44,6 @@ const addUserSchema = Joi.object({
   isMustChangePassword: Joi.boolean().messages(validationMessages),
 });
 
-const schemas = { addUserSchema };
+const schemas = { addUserSchema, loginUserSchema };
 
 module.exports = { User, schemas };
