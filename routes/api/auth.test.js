@@ -1,13 +1,14 @@
 /* eslint-disable */
 
 const request = require("supertest");
+const jwt = require("jsonwebtoken");
 
 const app = require("../../app");
 
 const { User } = require("../../models/user-model");
 
 require("dotenv").config();
-const { DB_DRIVER } = process.env;
+const { DB_DRIVER, SECRET_KEY } = process.env;
 
 const { sq } =
   DB_DRIVER === "MYSQL" ? require("../../config/mysql/db") : require("../../config/postgresql/db");
@@ -19,7 +20,7 @@ const { sq } =
  * 3. Must be stored token in user data
  */
 
-describe("test register route", () => {
+describe("test login route", () => {
   let server = null;
   beforeAll(async () => {
     await sq.authenticate();
@@ -45,7 +46,8 @@ describe("test register route", () => {
     const { body, statusCode } = await request(app).post("/api/users/login").send(loginData);
 
     expect(statusCode).toBe(200);
-    // expect(body.user.email).toBe(registerData.email);
+    const { id } = jwt.verify(body.token, SECRET_KEY);
+    expect(body.user.id).toBe(id);
     // expect(body.user.subscription).toBe("starter");
 
     // const user = await User.findOne({ email: registerData.email });

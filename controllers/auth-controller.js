@@ -66,7 +66,7 @@ async function login(req, res) {
     where: { [Op.or]: [{ login: login }, { email: login }, { phone: login }] },
   });
 
-  console.log(user);
+  // console.log(user);
 
   if (!user) {
     throw HttpError(401, "Authorization error");
