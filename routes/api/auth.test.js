@@ -38,20 +38,67 @@ describe("test login route", () => {
   //   await User.deleteMany({});
   // });
 
-  test("test correct login data", async () => {
-    const loginData = {
-      login: "admin",
-      password: "12345678",
-    };
-    const { body, statusCode } = await request(app).post("/api/users/login").send(loginData);
+  describe.each([["admin"], ["+380443332211"], ["admin@admin.com"]])(
+    "Correct login data ",
+    testLogin => {
+      test(`test correct login data for ${testLogin}:`, async () => {
+        const loginData = {
+          login: testLogin,
+          password: "12345678",
+        };
+        const { body, statusCode } = await request(app).post("/api/users/login").send(loginData);
 
-    expect(statusCode).toBe(200);
-    const { id } = jwt.verify(body.token, SECRET_KEY);
-    expect(body.user.id).toBe(id);
-    // expect(body.user.subscription).toBe("starter");
+        expect(statusCode).toBe(200);
+        const { id } = jwt.verify(body.token, SECRET_KEY);
+        const { login, email, phone } = body.user;
 
-    // const user = await User.findOne({ email: registerData.email });
-    //expect(user.email).toBe(registerData.email);
+        expect(body.user.id).toBe(id);
+        expect([login, email, phone].includes(loginData.login)).toBe(true);
+
+        // const userFields = [
+        //   "id",
+        //   "login",
+        //   "fullname",
+        //   "email",
+        //   "phone",
+        //   "isAdmin",
+        //   "isBlocked",
+        //   "isMustChangePassword",
+        // ];
+      });
+    }
+  );
+
+  describe.each([
+    [{ login: "admin", password: "121323" }],
+    [{ login: "+3804433322", password: "12345678" }],
+    ["admin@admin.com"],
+  ])("Incorrect login data ", testLogin => {
+    test(`test correct login data for ${testLogin}:`, async () => {
+      const loginData = {
+        login: testLogin,
+        password: "12345678",
+      };
+      const { body, statusCode } = await request(app).post("/api/users/login").send(loginData);
+
+      expect(statusCode).toBe(200);
+      const { id } = jwt.verify(body.token, SECRET_KEY);
+      const { login, email, phone } = body.user;
+
+      expect(body.user.id).toBe(id);
+      expect([login, email, phone].includes(loginData.login)).toBe(true);
+
+      // const userFields = [
+      //   "id",
+      //   "login",
+      //   "fullname",
+      //   "email",
+      //   "phone",
+      //   "isAdmin",
+      //   "isBlocked",
+      //   "isMustChangePassword",
+      // ];
+    });
   });
 });
 

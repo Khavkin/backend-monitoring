@@ -95,6 +95,7 @@ async function login(req, res) {
     token,
     user: {
       id: user.id,
+      login: user.login,
       fullname: user.fullname,
       email: user.email,
       phone: user.phone,
