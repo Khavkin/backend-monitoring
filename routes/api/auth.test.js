@@ -70,34 +70,27 @@ describe("test login route", () => {
   );
 
   describe.each([
-    [{ login: "admin", password: "121323" }],
-    [{ login: "+3804433322", password: "12345678" }],
-    ["admin@admin.com"],
-  ])("Incorrect login data ", testLogin => {
-    test(`test correct login data for ${testLogin}:`, async () => {
-      const loginData = {
-        login: testLogin,
-        password: "12345678",
-      };
-      const { body, statusCode } = await request(app).post("/api/users/login").send(loginData);
+    [
+      { login: "admin", password: "12132323" },
+      { statusCode: 401, message: "Authorization error" },
+    ],
+    [
+      { login: "admin", password: "1213232" },
+      { statusCode: 401, message: "Authorization error" },
+    ],
+    [
+      { login: "+3804433322", password: "12345678" },
+      { statusCode: 401, message: "Authorization error" },
+    ],
+    [{ login: "admin@admin.com" }, { statusCode: 400, message: '"password" is required' }],
+    [{ password: "12121212" }, { statusCode: 400, message: '"login" is required' }],
+    [{}, { statusCode: 400, message: "Missing fields" }],
+  ])("Incorrect login data ", (testLogin, expectation) => {
+    test(`test incorrect login data for ${testLogin.login} (${testLogin.password}):`, async () => {
+      const { statusCode, body } = await request(app).post("/api/users/login").send(testLogin);
 
-      expect(statusCode).toBe(200);
-      const { id } = jwt.verify(body.token, SECRET_KEY);
-      const { login, email, phone } = body.user;
-
-      expect(body.user.id).toBe(id);
-      expect([login, email, phone].includes(loginData.login)).toBe(true);
-
-      // const userFields = [
-      //   "id",
-      //   "login",
-      //   "fullname",
-      //   "email",
-      //   "phone",
-      //   "isAdmin",
-      //   "isBlocked",
-      //   "isMustChangePassword",
-      // ];
+      expect(statusCode).toBe(expectation.statusCode);
+      expect(body.message).toBe(expectation.message);
     });
   });
 });

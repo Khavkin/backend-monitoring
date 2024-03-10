@@ -30,7 +30,7 @@ const User = sq.define(
 
 const loginUserSchema = Joi.object({
   login: Joi.string().required().messages(validationMessages),
-  password: Joi.string().min(8).required().messages(validationMessages),
+  password: Joi.string().required().messages(validationMessages),
 });
 
 const addUserSchema = Joi.object({
